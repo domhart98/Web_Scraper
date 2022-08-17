@@ -14,7 +14,7 @@ class Boxer():
         self.reach = reach;
         self.nationality = nationality;
         self.lastFight = lastFight;
-        self.activityLevel = activitLevel;
+        self.activityLevel = activityLevel;
         self.titles = titles;
         self.opponents = opponents;
         self.fights = fights;
