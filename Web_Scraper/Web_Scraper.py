@@ -1,12 +1,11 @@
 from bs4 import BeautifulSoup
 import os
+import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.service import Service
-from boxer import Boxer
 from webdriver_manager.chrome import ChromeDriverManager
-
 
 def scrape_boxer():
     name = driver.find_element(By.ID, "name")
@@ -37,28 +36,38 @@ def scrape_boxer():
 
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 baseURL = "https://boxrec.com"
-driver.get(baseURL);
+driver.get(baseURL)
 
+driver.find_element(By.CLASS_NAME, "lozengeButton").click()
+time.sleep(2)
 driver.find_element(By.ID, "username").send_keys("domhart98@hotmail.com")
-driver.find_element(By.ID, "password").send_keys("")
+driver.find_element(By.ID, "password").send_keys("Spronk1s/Spronk1s/")
 driver.find_element(By.CLASS_NAME, "submitButton").click()
 driver.find_element(By.LINK_TEXT, "ratings").click()
 driver.find_element(By.ID, "select2-r_division-container").click()
 driver.find_element(By.CLASS_NAME, "select2-search__field").send_keys("heavy")
 driver.find_element(By.CLASS_NAME, "select2-search__field").send_keys(Keys.RETURN)
+time.sleep(2)
+driver.execute_script("window.scrollTo(0, 100)")
+time.sleep(2)
 driver.find_element(By.CLASS_NAME, "submitButton").click()
 
 
-soup = BeautifulSoup(driver.page_source, 'html.parser')
 
-links = soup.find_all(class_ = "personLink")
 
-for item in links:
-    link = item.get_attribute("href")
+##
+links = driver.find_elements(By.CLASS_NAME,"personLink")
+##driver.execute_script("window.scrollTo(0, 200)")
+for link in links:
     print(link)
-    driver.get(baseURL+link)
-    scrape_boxer()
+    link.click()
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+    fighter_data = soup.find_all('td')
+    print(fighter_data)
     driver.back()
     
+
+
+##TODO: Add boxer data to excel spreadsheet & PostgreSQL database
 
 
